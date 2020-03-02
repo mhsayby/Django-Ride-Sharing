@@ -1,0 +1,36 @@
+{% extends "rides/base.html" %}
+
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.username }}</h2>
+        </div>
+      </div>
+      {% if user.profile.status == "driver" %}
+      <form method="POST" enctype="multipart/form-data" action="{% url 'profile' %}" >
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Profile Info</legend>
+              {{ u_form.as_p }}
+              {{ p_form.as_p }}
+          </fieldset>
+          <div class="form-group">
+              <button class="btn btn-outline-info" type="submit" >Update</button>
+          </div>
+      </form>
+      {% else %}
+      <form method="POST" enctype="multipart/form-data" action="{% url 'user_status' %}" >
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Profile Info</legend>
+              {{ u_form.as_p }}
+          </fieldset>
+          <div class="form-group">
+              <button class="btn btn-outline-info" type="submit" >Update</button>
+          </div>
+      </form>
+      {% endif %}
+    </div>
+{% endblock content %}

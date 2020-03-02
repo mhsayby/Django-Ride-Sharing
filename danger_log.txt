@@ -1,0 +1,35 @@
+Danger Log:
+01/22:
+We find that if we store user password in database, there will be security issue when people who knows programming can see all password.
+01/24:
+We fix this storing the hashed password and added salt to it.
+
+01/25:
+Each person should not accept or confirm their own request in any way.
+01/25:
+Fixed it by doing conditional checks.
+
+01/28:
+Owners who submit requests that have blank section (e.g. plate number as blank) should indicate that they don't care about the field; however, what the filter will do is to see that the blank does not match any driver info, hence no driver will ever see the request.
+01/30:
+Fixed it by adding layers of filtering: check not None and filter just this request, and continue filtering.
+
+02/02:
+Different users can type the same information in slightly different format, or they can have typo: e.g. an owner may want to find a car with type "RAV4", but accidentally typed "RAVV4". He would never find a valid ride. 
+02/03:
+We change some type-in section to selection. This may solve some problems, but for car types section that has dozens of types, we cannot do it and the information would be hard to gather.
+
+02/05:
+User who types in invalid volume like "5WS2" or "10.3" would result in unexpected behavior.
+02/06:
+We can try and catch it. However, we still need a more reasonable way to keep the app ongoing with these corner cases, and should think about the reason why it occurs: e.g. is it a typo, should we auto-fix it (like change 10.3 to 10) or just don't let user do it?
+
+Remained possible problems:
+1. Validation handling:
+Requests with invalid time, address and volume, as well as drivers' car plate and type is hard to check. We need validation apis for all of them probably from the car companies.
+
+2. Requests confirmation details: 
+Driver should not confirm a ride after the requested time, and also not confirm requests that have slightly different details.
+
+3. User can use postman to change its own status
+We hide the detail of user status, and only allow user to change status with buttons we provide. Although we implemented the authentication, user who logged in and know our app's logic could still use software like Postman to send post request and manually type in their status and mess with the database. Wrong status may lead to unexpected failure of requests.

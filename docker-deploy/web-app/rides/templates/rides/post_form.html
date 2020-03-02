@@ -1,0 +1,23 @@
+{% extends "rides/base.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Rides Request</legend>
+                {{ form.as_p }}
+            </fieldset>
+            <div class="form-group">
+                {% if user.profile.status == "driver" %}
+                    <h2 >Are you sure to accept this request?</h2>
+                    <h4 >If so, we will send emails to the owner and shares.</h4>
+                {% elif user.profile.status == "sharer" %}
+                    <h2 >Are you sure to join this ride?</h2>
+                </br>
+                {% endif %}
+                <button class="btn btn-outline-info" type="submit">Confirm</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

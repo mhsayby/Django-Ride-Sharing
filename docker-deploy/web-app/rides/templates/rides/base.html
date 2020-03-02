@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'rides/main.css' %}">
+
+    {% if title %}
+        <title>Django Rides - {{ title }}</title>
+    {% else %}
+        <title>Django Rides</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="{% url 'rides-home' %}">Rides</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{% url 'rides-home' %}">Home</a>
+              <a class="nav-item nav-link" href="{% url 'rides-about' %}">About</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if user.is_authenticated %}
+                {% if user.profile.status == "driver" %}
+                    <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                {% else %}
+                    <a class="nav-item nav-link" href="{% url 'user_status' %}">Profile</a>
+                {% endif %}
+                <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-4">
+          </br></br></br></br></br>
+          <div class="content-section">
+            <h3>Welcome {{ user.username }}</h3>
+            <p class='text-muted'> {{ user.profile.status }}
+              <ul class="list-group">
+              {% if user.profile.status == "driver" %}
+                <a class="list-group-item list-group-item-light" href="{% url 'pending-posts' user.username %}">Find pending requests</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'confirmed-posts' user.username %}">Complete my confirmed requests</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'completed-posts' user.username %}">My completed requests</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'user_owner' %}">Use as owner</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'user_sharer' %}">Use as sharer</a>
+              {% elif user.profile.status == "owner" %}
+                <a class="list-group-item list-group-item-light" href="{% url 'post-create' %}">New request</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'pending-posts' user.username %}">My pending requests</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'confirmed-posts' user.username %}">My ongoing requests</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'completed-posts' user.username %}">My completed requests</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'user_driver' %}">Use as driver</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'user_sharer' %}">Use as sharer</a>
+              {% elif user.profile.status == "sharer" %}
+                <a class="list-group-item list-group-item-light" href="{% url 'find-pending-posts' user.username %}">Join an ongoing ride</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'pending-posts' user.username %}">My ongoing pending ride</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'confirmed-posts' user.username %}">My ongoing confirmed ride</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'completed-posts' user.username %}">My completed request</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'user_driver' %}">Use as driver</a>
+                <a class="list-group-item list-group-item-light" href="{% url 'user_owner' %}">Use as owner</a>
+              {% endif %}
+              </ul>
+            </p>
+          </div>
+        </div>
+        <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </br></br></br></br></br>
+          {% block content %}{% endblock %}
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
